@@ -1,0 +1,17 @@
+.sec__content h1{
+    font-size:2.3rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: var(--heading-color);
+}
+ 
+.sec__content p{
+ font-size: 1.1rem;
+ color: var(--text-color);
+ line-height: 2rem;
+}
+
+.sec__content{
+    padding-top: 1.5rem;
+}
