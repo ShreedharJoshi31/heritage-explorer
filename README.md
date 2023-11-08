@@ -13,7 +13,7 @@ Heritage Explorer is a web application that allows users to explore various hist
 5. [Usage](#usage)
 6. [Configuration](#configuration)
 7. [API Routes](#api-routes)
-    - [Auth Routes](#auth-routes)
+    - [Auth Routes](#api-routes-apiv1)
     - [Booking Routes](#booking-routes)
     - [Payment Routes](#payment-routes)
     - [Review Routes](#review-routes)
