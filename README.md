@@ -1,7 +1,5 @@
 # Heritage Explorer
 
-![Heritage Explorer]
-
 ![Screenshot (869)](https://github.com/ShreedharJoshi31/heritage-explorer/assets/99608980/501f844a-9c51-483d-844d-647ef21ddef0)
 
 
@@ -62,7 +60,7 @@ Before running the application, you need to set up the following environment var
 
 Make sure to provide appropriate values for these variables before running the application. You can create a `.env` file in the root directory of the backend and define these variables according to your setup.
 
-### API Routes(/api/v1)
+### API Routes (/api/v1)
 
 #### Auth Routes
 - `POST /auth/register`: Register a new user.
