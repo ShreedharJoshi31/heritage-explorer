@@ -15,7 +15,6 @@ const Bookings = () => {
     loading,
   } = useFetch(`${BASE_URL}/booking/user/${user?._id}`);
 
-
   if (!user) {
     // User is not logged in, you can render a message or redirect to a login page
     return (
@@ -25,6 +24,8 @@ const Bookings = () => {
       </div>
     );
   }
+
+  const today = new Date();
 
   return (
     <>

@@ -1,13 +1,17 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import "../styles/tour-details.css";
-import { Container, Row, Col, Form, ListGroup } from "reactstrap";
+import { Container, Row, Col, Form, ListGroup, Progress } from "reactstrap";
 import { useParams } from "react-router-dom";
 import calculateAvgRating from "./../utils/avgRating";
 import avatar from "../assets/images/avatar.jpg";
 import Booking from "../components/Booking/Booking";
 import useFetch from "./../hooks/useFetch";
-import { BASE_URL } from "./../utils/config";
+import { BASE_URL, FLASK_URL } from "./../utils/config";
 import { AuthContext } from "./../context/AuthContext";
+import axios from "axios";
+import { Badge } from "reactstrap";
+import TourCard from "../shared/TourCard";
+import Subtitle from "../shared/Subtitle";
 
 const TourDetails = () => {
   const { id } = useParams();
@@ -38,6 +42,56 @@ const TourDetails = () => {
   const [clickedRating, setClickedRating] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [totalAvailableTickets, setTotalAvailableTickets] = useState(null);
+  const [overallSentiment, setOverallSentiment] = useState("positive");
+
+  const [positiveCount, setPositiveCount] = useState(0);
+  const [negativeCount, setNegativeCount] = useState(0);
+  const [neutralCount, setNeutralCount] = useState(0);
+
+  const calculateSentiment = () => {
+    let posCount = 0;
+    let negCount = 0;
+    let neuCount = 0;
+
+    if (reviews) {
+      reviews.forEach((review) => {
+        switch (review.sentiment) {
+          case 1:
+          case 2:
+            negCount++;
+            break;
+          case 3:
+            neuCount++;
+            break;
+          case 4:
+          case 5:
+            posCount++;
+            break;
+          default:
+            break;
+        }
+      });
+    }
+
+    setPositiveCount(posCount);
+    setNegativeCount(negCount);
+    setNeutralCount(neuCount);
+
+    setOverallSentiment(
+      positivePercentage > negativePercentage
+        ? positivePercentage > neutralPercentage
+          ? "positive"
+          : "neutral"
+        : negativePercentage > neutralPercentage
+        ? "negative"
+        : "neutral"
+    );
+  };
+
+  const totalReviews = positiveCount + negativeCount + neutralCount; // Add 1 for the current review
+  const positivePercentage = (positiveCount / totalReviews) * 100;
+  const negativePercentage = (negativeCount / totalReviews) * 100;
+  const neutralPercentage = (neutralCount / totalReviews) * 100;
 
   const fetchAvailableTickets = async () => {
     if (selectedDate) {
@@ -73,10 +127,19 @@ const TourDetails = () => {
         alert("please sign in");
       }
 
+      const pythonServerUrl = `${FLASK_URL}/predict`;
+      const pythonServerResponse = await axios.post(pythonServerUrl, {
+        text: reviewText,
+      });
+
+      // Get sentiment result from the Python server response
+      const sentimentClass = pythonServerResponse.data.sentiment_class;
+
       const reviewObj = {
         username: user?.username,
         reviewText,
-        rating: clickedRating, // Use clickedRating here
+        rating: clickedRating,
+        sentiment: sentimentClass,
       };
 
       console.log("Submitting review:", reviewObj);
@@ -96,7 +159,7 @@ const TourDetails = () => {
       if (!res.ok) {
         return alert(result.message);
       }
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error("Error submitting review:", error);
       alert("Failed to submit review. Please try again later.");
@@ -105,12 +168,68 @@ const TourDetails = () => {
     setClickedRating(null);
   };
 
-  const finalAvailableTickets = totalAvailableTickets > -1 ? totalAvailableTickets : maxGroupSize;
+  const fetchDataForId = async (id) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/tours/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching data for ID ${id}:`, error.message);
+      return null;
+    }
+  };
+
+  const [recommendedTours, setRecommendedTours] = useState();
+
+  const getRecommendedTours = async () => {
+    try {
+      const pythonServerResponse = await axios.post(`${FLASK_URL}/recommend`, {
+        title: title,
+      });
+
+      const results = await Promise.all(
+        pythonServerResponse.data.recommendations.map((id) =>
+          fetchDataForId(id)
+        )
+      );
+
+      const ans = results.map((item) => {
+        return item.data;
+      });
+
+      setRecommendedTours(ans);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  console.log(recommendedTours);
+
+  const finalAvailableTickets =
+    totalAvailableTickets > -1 ? totalAvailableTickets : maxGroupSize;
+
+  function formatDateString(inputDateString) {
+    const inputDate = new Date(inputDateString);
+
+    const options = {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    };
+
+    const formattedDate = inputDate.toLocaleString("en-US", options);
+
+    return formattedDate;
+  }
 
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchAvailableTickets();
+    calculateSentiment();
   }, [tour, selectedDate]);
+
+  useEffect(() => {
+    getRecommendedTours();
+  }, [title]);
 
   return (
     <>
@@ -164,7 +283,79 @@ const TourDetails = () => {
                   </div>
                   {/* {=========================== tour reviws Section==================} */}
                   <div className="tour__reviews mt-4">
-                    <h4>Reviews ({reviews?.length} reviews)</h4>
+                    <h4>
+                      Reviews ({reviews?.length} reviews)
+                      {overallSentiment && (
+                        <Badge
+                          color={
+                            overallSentiment === "positive"
+                              ? "success"
+                              : overallSentiment === "negative"
+                              ? "danger"
+                              : "secondary"
+                          }
+                          className="ml-2"
+                          pill
+                          style={{ marginLeft: "5px" }}
+                        >
+                          Overall Sentiment: {overallSentiment}
+                        </Badge>
+                      )}
+                    </h4>
+                    <div className="sentiment_progress_bar-container d-flex">
+                      <div className="sentiment_progress_bar d-flex">
+                        <p>Positive : </p>
+                        <Progress
+                          multi
+                          className="mb-3"
+                          style={{ width: "55%", marginLeft: "15px" }}
+                        >
+                          <Progress
+                            bar
+                            color="success"
+                            value={positivePercentage}
+                          >
+                            {Math.round(positivePercentage)}%
+                          </Progress>
+                        </Progress>
+                      </div>
+
+                      <div className="sentiment_progress_bar d-flex">
+                        <p>Negative : </p>
+
+                        <Progress
+                          multi
+                          className="mb-3"
+                          style={{ width: "55%", marginLeft: "5px" }}
+                        >
+                          <Progress
+                            bar
+                            color="danger"
+                            value={negativePercentage}
+                          >
+                            {Math.round(negativePercentage)}%
+                          </Progress>
+                        </Progress>
+                      </div>
+
+                      <div className="sentiment_progress_bar d-flex">
+                        <p>Neutral : </p>
+
+                        <Progress
+                          multi
+                          className="mb-3"
+                          style={{ width: "55%", marginLeft: "16px" }}
+                        >
+                          <Progress
+                            bar
+                            color="secondary"
+                            value={neutralPercentage}
+                          >
+                            {Math.round(neutralPercentage)}%
+                          </Progress>
+                        </Progress>
+                      </div>
+                    </div>
                     <Form onSubmit={submitHandler}>
                       <div className="d-flex align-items-center gap-3 mb-4 rating__group">
                         {[1, 2, 3, 4, 5].map((rating) => (
@@ -208,10 +399,11 @@ const TourDetails = () => {
                               <div>
                                 <h5>{review.username}</h5>
                                 <p>
-                                  {new Date().toLocaleDateString(
+                                  {/* {new Date().toLocaleDateString(
                                     "en-us",
                                     options
-                                  )}
+                                  )} */}
+                                  {formatDateString(review.createdAt)}
                                 </p>
                               </div>
                               <span className="d-flex align-items-center">
@@ -240,6 +432,19 @@ const TourDetails = () => {
               </Col>
             </Row>
           )}
+          <Container>
+            <Row>
+              <Col lg="12" className="mb-5 mt-5">
+                <Subtitle subtitle={"Explore"} />
+                <h2 className="featured__tour-title">Recommended for you</h2>
+              </Col>
+              {recommendedTours?.map((tour, index) => (
+                <Col lg="3" className="mb-4" key={tour._id}>
+                  <TourCard tour={tour} />
+                </Col>
+              ))}
+            </Row>
+          </Container>
         </Container>
       </section>
     </>

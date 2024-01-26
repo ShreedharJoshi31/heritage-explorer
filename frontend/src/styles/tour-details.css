@@ -120,3 +120,12 @@
 .review__item span {
   font-weight: 500;
 }
+
+.sentiment_progress_bar-container {
+  flex-direction: column;
+}
+
+.sentiment_progress_bar {
+  max-width: 80%;
+  align-items: center;
+}

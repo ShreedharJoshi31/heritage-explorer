@@ -21,6 +21,9 @@ const reviewSchema = new mongoose.Schema(
       max: 5,
       default: 0,
     },
+    sentiment: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );
