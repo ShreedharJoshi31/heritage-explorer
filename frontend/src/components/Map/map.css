@@ -1,0 +1,59 @@
+.mapdiv{
+  position: relative;
+  padding-top: 12%;
+  padding-bottom: 12%;
+  margin-left: 25%;
+}
+
+svg{
+  width: 80%;
+  transform: scale(1.8);
+}
+
+path{
+  fill: #faa935;
+  stroke: #0b2727;
+  transition: fill 0.3s;
+}
+
+a{
+  text-decoration: none;
+  cursor: pointer;
+}
+  
+a:hover path{
+  fill: #ad711d;
+}
+
+.maplabels1{
+  font-family: "Montserrat";
+  font-weight: 500;
+  font-size: 0.6rem;
+}
+
+@media (max-width: 768px) {
+  .mapdiv {
+    max-width: 200%;
+    width: 750px;
+    height: 460px;
+    margin-top: -200px;
+    margin-bottom: -150px;
+    margin-left: -250px;
+    padding-left: 16%;
+  }
+  
+  svg{
+    overflow: hidden;
+    width: 200%;
+    transform: scale(0.65);
+    overflow: hidden;
+    margin-left: 50px;
+    margin-top: -100px;
+    margin-bottom: -200px;
+  }
+
+  .maplabels1 {
+    font-size: 0.8rem;
+  }
+}
+    
