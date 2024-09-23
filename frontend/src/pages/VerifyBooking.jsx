@@ -46,7 +46,7 @@ const VerifyBooking = () => {
     return (
       <div className="center-content">
         <img
-          src="/checked.png" // Ensure this is the correct path to your image
+          src="/caution.png" // Ensure this is the correct path to your image
           alt="Verified"
           className="tickmark-image" // Add custom styles if needed
         />
