@@ -14,7 +14,9 @@ Heritage Explorer is a web application that allows users to explore various hist
 6. [Configuration](#configuration)
 7. [Generating QR Codes](#generating-qr-codes)
 8. [Sentiment Analysis](#sentiment-analysis)
-9. [Dynamic Tour Recommendations](#dynamic-tour-recommendations)
+9. [Ticket Verification and Validation](#ticket-verification-and-validation)
+10. [Dynamic Tour Recommendations](#dynamic-tour-recommendations)
+11. [Closing](#closing)
 
 ### Project Description
 
