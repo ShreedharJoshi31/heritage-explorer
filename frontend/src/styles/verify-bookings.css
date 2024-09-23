@@ -1,0 +1,18 @@
+.center-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Make the div take up the full viewport height */
+  text-align: center;
+}
+
+.tickmark-image {
+  width: 100px; /* Adjust the size of the tick mark */
+  margin-bottom: 20px; /* Add space between the image and the text */
+}
+
+.booking-details {
+  margin-top: 20px; /* Space above booking details */
+  text-align: center; /* Align text to the left */
+}

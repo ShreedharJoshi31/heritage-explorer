@@ -1,5 +1,5 @@
 import Booking from "../models/Booking.js";
-import qrcode from 'qrcode';
+import qrcode from "qrcode";
 
 // create new booking
 export const createBooking = async (req, res) => {
@@ -100,15 +100,89 @@ export const generateQrCode = async (req, res) => {
   const bookingId = req.params.bookingId;
 
   try {
-    qrcode.toDataURL(`${process.env.FRONTEND_URL}/bookings/${bookingId}`, function(err, url) {
-      if (err) return console.log(err);
-      // console.log(url);
-      res.status(200).send(url);
-    })
+    qrcode.toDataURL(
+      `${process.env.FRONTEND_URL}/bookings/${bookingId}`,
+      function (err, url) {
+        if (err) return console.log(err);
+        // console.log(url);
+        res.status(200).send(url);
+      }
+    );
   } catch (error) {
     res.status(404).json({
       success: false,
       message: "galat",
     });
   }
-}
+};
+
+export const generateQrCodeForVerification = async (req, res) => {
+  const bookingId = req.params.bookingId;
+
+  try {
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Booking not found" });
+    }
+
+    qrcode.toDataURL(
+      `${process.env.FRONTEND_URL}/bookings/verify/${bookingId}`,
+      async (err, url) => {
+        if (err)
+          return res
+            .status(500)
+            .json({ success: false, message: "QR Code generation failed" });
+
+        res.status(200).json({
+          success: true,
+          message: "QR Code generated",
+          qrCode: url,
+        });
+      }
+    );
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const verifyBooking = async (req, res) => {
+  const bookingId = req.params.bookingId;
+
+  try {
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Booking not found" });
+    }
+
+    if (booking.verified) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Booking already verified" });
+    }
+
+    // Mark the booking as verified
+    booking.verified = true;
+    await booking.save();
+
+    // Prepare the response with booking details
+    const bookingDetails = {
+      tourName: booking.tourName,
+      fullName: booking.fullName,
+      phone: booking.phone,
+      date: booking.bookAt, // Assuming date is stored as a Date object
+      guestSize: booking.guestSize,
+    };
+
+    res.status(200).json({
+      success: true,
+      message: "Booking successfully verified",
+      booking: bookingDetails, // Include the booking details in the response
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};

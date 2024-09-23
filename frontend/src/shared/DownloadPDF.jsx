@@ -1,58 +1,62 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { BASE_URL } from '../utils/config';
-import { useParams, useNavigate } from 'react-router-dom';
-import jsPDF from 'jspdf';
+import React from "react";
+import { Document, Page, Text, View, Image } from "@react-pdf/renderer";
 
-const DownloadPDF = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [booking, setBooking] = useState(null);
-  const [pdfGenerated, setPdfGenerated] = useState(false);
-
-  const formattedDate = booking ? new Date(booking.data.bookAt).toLocaleDateString() : '';
-
-  useEffect(() => {
-
-    axios.get(`${BASE_URL}/booking/${id}`)
-      .then((response) => {
-        setBooking(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching booking data:', error);
-      });
-  }, [id]);
-
-  useEffect(() => {
-    if (booking && !pdfGenerated) {
-      generatePDF(booking.data);
-      setPdfGenerated(true);
-    }
-  }, [booking, pdfGenerated]);
-
-  const generatePDF = (bookingData) => {
-    const doc = new jsPDF();
-
-    const content = `
-      Tour Name: ${bookingData.tourName}
-      Fullname: ${bookingData.fullName}
-      Phone number: ${bookingData.phone}
-      Date: ${formattedDate}
-      Number of bookings: ${bookingData.guestSize}
-    `;
-
-    doc.text(content, 10, 10);
-
-    const pdfFileName = `Booking_Details_${bookingData._id}.pdf`;
-    doc.save(pdfFileName);
-
-    
-    navigate('/bookings');
-  };
+const DownloadPDF = ({ booking, qrCodeUrl }) => {
+  const formattedDate = new Date(booking.bookAt).toLocaleDateString();
 
   return (
-    <h1>{pdfGenerated ? 'PDF Generated, Redirecting...' : 'DOWNLOADING PDF.......'}</h1>
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.section}>
+          {/* QR Code Image */}
+          <Image src={qrCodeUrl} style={styles.qrCode} />
+          <Text style={styles.title}>Booking Details</Text>
+          <Text>Tour Name: {booking.tourName}</Text>
+          <Text>Full Name: {booking.fullName}</Text>
+          <Text>Phone Number: {booking.phone}</Text>
+          <Text>Date: {formattedDate}</Text>
+          <Text>Number of Bookings: {booking.guestSize}</Text>
+        </View>
+      </Page>
+    </Document>
   );
+};
+
+// Styles
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100vh",
+  },
+  page: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 30,
+  },
+  section: {
+    display: "flex",
+    flexDirection: "column",
+    margin: 10,
+    padding: 10,
+    flexGrow: 1,
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
+  qrCode: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
 };
 
 export default DownloadPDF;

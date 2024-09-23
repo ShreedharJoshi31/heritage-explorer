@@ -1,61 +1,68 @@
-
 .horizontal-product-card {
-    margin: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-  }
-  
-  .horizontal-product-card .col-md-4 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .horizontal-product-card .product-image {
-    height: 600px;
-    width: 600px;
-    object-fit: contain;
-  }
-  
-  .horizontal-product-card .card-img {
-    max-width: 100%;
-    max-height: 150px;
-  }
-  
-  .horizontal-product-card .col-md-8 {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .card-title {
-    font-size: 2rem; 
-    color: var(--heading-color);
-    font-weight: bold;
-  }
-  
-  .horizontal-product-card .card-text {
-    margin-top: 10px;
-    color: var(--text-color);
-  }
-  
-  .booking__btn{
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    border: none;
-    background: var(--secondary-color) !important;
-    cursor: pointer;
-    padding: 0.2rem 0.5rem !important;
-    border: none !important;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
-    .booking__btn a {
-        text-decoration: none;
-        font-size: 0.9rem;
-        color: #fff;
-    }
-    
-  
+.horizontal-product-card .col-md-4 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.horizontal-product-card .product-image {
+  height: 600px;
+  width: 600px;
+  object-fit: contain;
+}
+
+.horizontal-product-card .card-img {
+  max-width: 100%;
+  max-height: 150px;
+}
+
+.horizontal-product-card .col-md-8 {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 2rem;
+  color: var(--heading-color);
+  font-weight: bold;
+}
+
+.horizontal-product-card .card-text {
+  margin-top: 10px;
+  color: var(--text-color);
+}
+
+.booking__btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  border: none;
+  background: var(--secondary-color) !important;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem !important;
+  border: none !important;
+}
+
+.download__btn {
+  position: absolute;
+  bottom: 60px;
+  right: 20px;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem !important;
+  border: none !important;
+}
+
+.booking__btn a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: #fff;
+}
