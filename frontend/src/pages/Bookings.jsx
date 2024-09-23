@@ -45,9 +45,11 @@ const Bookings = () => {
   console.log(bookings);
 
   const today = new Date();
-  const futureBookings = bookings?.filter(
-    (booking) => new Date(booking.bookAt) >= today
-  );
+  today.setHours(0, 0, 0, 0);
+
+  const futureBookings = bookings
+    ?.filter((booking) => new Date(booking.bookAt) >= today)
+    .sort((a, b) => new Date(a.bookAt) - new Date(b.bookAt));
 
   return (
     <>
