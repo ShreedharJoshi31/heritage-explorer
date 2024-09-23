@@ -4,3 +4,6 @@ backend/MLmodels/venv
 frontend/package-lock.json
 backend/package-lock.json
 .env
+# Local Netlify folder
+.netlify
+frontend/build
