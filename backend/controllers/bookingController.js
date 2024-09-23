@@ -164,23 +164,35 @@ export const verifyBooking = async (req, res) => {
         .json({ success: false, message: "Booking already verified" });
     }
 
-    // Mark the booking as verified
+    const today = new Date();
+    const bookingDate = new Date(booking.bookAt);
+
+    if (
+      bookingDate.getFullYear() !== today.getFullYear() ||
+      bookingDate.getMonth() !== today.getMonth() ||
+      bookingDate.getDate() !== today.getDate()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Booking can only be verified for today",
+      });
+    }
+
     booking.verified = true;
     await booking.save();
 
-    // Prepare the response with booking details
     const bookingDetails = {
       tourName: booking.tourName,
       fullName: booking.fullName,
       phone: booking.phone,
-      date: booking.bookAt, // Assuming date is stored as a Date object
+      date: booking.bookAt,
       guestSize: booking.guestSize,
     };
 
     res.status(200).json({
       success: true,
       message: "Booking successfully verified",
-      booking: bookingDetails, // Include the booking details in the response
+      booking: bookingDetails,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error" });
