@@ -5,21 +5,23 @@
 Heritage Explorer is a web application that allows users to explore various historical sites in Maharashtra, India. It provides detailed information about these historical places and allows users to book tickets for visiting them.
 
 ## Table of Contents
+
 1. [Project Description](#project-description)
 2. [Features](#features)
 3. [Technologies Used](#technologies-used)
 4. [Installation](#installation)
 5. [Usage](#usage)
 6. [Configuration](#configuration)
-9. [Generating QR Codes](#generating-qr-codes)
-10. [Sentiment Analysis](#sentiment-analysis)
-11. [Dynamic Tour Recommendations](#dynamic-tour-recommendations)
-
+7. [Generating QR Codes](#generating-qr-codes)
+8. [Sentiment Analysis](#sentiment-analysis)
+9. [Dynamic Tour Recommendations](#dynamic-tour-recommendations)
 
 ### Project Description
+
 Heritage Explorer is a web-based platform that aims to promote and educate users about the rich historical heritage of Maharashtra. It offers a comprehensive database of historical sites, complete with detailed information, images, and the ability to book tickets for visits.
 
 ### Features
+
 - Explore a wide range of historical sites in Maharashtra.
 - View detailed information about each historical site, including history, significance, and visitor information.
 - Book tickets for visiting historical places.
@@ -28,8 +30,10 @@ Heritage Explorer is a web-based platform that aims to promote and educate users
 - Generate QR codes for bookings, allowing easy access to a PDF with booking details.
 - **Sentiment Analysis**: Analyze comments on each tour details page to provide insights into the sentiment expressed by users.
 - **Dynamic Tour Recommendations**: Receive personalized tour recommendations based on each tour, enhancing the user experience and encouraging exploration.
+- **Ticket Verification**: Heritage Explorer now includes ticket verification to prevent reuse of tickets for multiple entries. QR codes are validated in real time at the entrance, ensuring each ticket is used only once.
 
 ### Technologies Used
+
 - MongoDB: Database for storing historical site information.
 - Express.js: Backend server for handling API requests.
 - React: Frontend for the user interface.
@@ -38,17 +42,20 @@ Heritage Explorer is a web-based platform that aims to promote and educate users
 - Other libraries and tools as needed.
 
 ### Installation
+
 1. Clone the repository.
 2. Install dependencies using `npm install`.
-3. Set up environment variables as specified in `.env.example`.
+3. Set up environment variables as specified below.
 
 ### Usage
-1. Run the backend development server with `npm run start-dev`.
-2. Run the frontend development server  with `npm run start`.
-3. Run the Flask development server  with `Python model.py`.
+
+1. Run the backend development server with `npm run dev`.
+2. Run the frontend development server with `npm run start`.
+3. Run the Flask development server with `python model.py`.
 4. Access the website through your web browser.
 
 ### Configuration
+
 Before running the application, you need to set up the following environment variables in a `.env` file:
 
 - `PORT`: The port on which the server will run.
@@ -72,17 +79,25 @@ FRONTEND_URL=https://your-frontend-url.com
 ```
 
 ### Generating QR Codes
+
 When a booking is made through the /bookings endpoint, a QR code is generated for that booking. Scanning the QR code will provide a PDF with all the booking details, making it easy for users to access and present their booking information.
 
 ### Sentiment Analysis
+
 The platform incorporates sentiment analysis to provide insights into user comments on each tour details page. This feature allows users and administrators to understand the overall sentiment expressed in the comments section.
 
+### Ticket Verification and Validation
+
+In order to prevent the misuse of tickets for multiple entries, Heritage Explorer now includes a ticket verification and validation feature. When users present their QR code at the entrance of a historical site, the system checks its validity in real time. This ensures that each ticket is valid for one-time use only, preventing duplicate entries.
+
+This feature is seamlessly integrated into the booking system, providing a secure and streamlined process for both users and site administrators.
+
 ### Dynamic Tour Recommendations
+
 Receive personalized tour recommendations based on each tour you explore. This dynamic feature enhances the user experience, providing tailored suggestions for further exploration.
 
 ## Closing
+
 Thank you for exploring Heritage Explorer, your gateway to the rich historical heritage of Maharashtra. We hope you find this platform informative and useful in your journey to discover and experience the history and culture of this beautiful region.
 If you have any questions, encounter issues, or wish to contribute to the project, please don't hesitate to get in touch. Your feedback and involvement are highly valued as we continue to improve and expand the Heritage Explorer experience.
 Enjoy your exploration of Maharashtra's heritage, and let the journey begin!
-
-
